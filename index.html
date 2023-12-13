@@ -8,7 +8,7 @@
   <h1 id="hey"></h1>
 </body>
 <script type="module">
-    import {Heimdall, TidePromise} from "http://localhost:6001/src/heimdall.js";
+    import {Heimdall, TidePromise, FieldData} from "https://unpkg.com/heimdall-tide@0.0.50-test/src/heimdall.js";
     
     const config = {
       vendorPublic: "JFRx67tBKknkrgD3aVbce+XdzRc0UnPau5D5ZleL1x0=",
@@ -23,12 +23,24 @@
     }
 
     const heimdall = new Heimdall(config);
-    const tidePromise = new TidePromise(); // a TidePromise which allows us to get the values from the FULL sign in process
-    const tideButtonAction = async (promise) => heimdall.GetCompleted(promise); // describe what we want the tide button to do
-    const tideButton = heimdall.AddTideButton(tideButtonAction, tidePromise); // returns Tide Button for you to stylise
 
-    const values = await tidePromise.promise;
+    const jwt = "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiJjZGMxOTJhOGFmNzc5NjQwMmQzYjNlYzg4YzkzMWYxZmQzODc1YjQwMGRhOGFkZjg4MGI3Y2QzMDNhODFmODA1IiwiZXhwIjoxNzAxNjU2ODE5LCJnU2Vzc0tleVB1YiI6Ik95ZForZmROdWxCMHhwYm9jWGNLY3BHSS9kUGh5YTkwKzBwWmpKalhHanM9IiwiZ1ZWSyI6IjRnT3B0NElXeDRpckx6L3BLQ3dzM1BPa2RqOG9HSDBBb0pVTXpWdXQ4VTA9In0.4XLEzkJRklN0ZQt-GBGOtHOx-esomCIP0VXioaG-8Eu1eVdGFWJg-o22i4uiOIAnImcus5w1OIs2ze9gjJwHAw";
 
-    document.getElementById("hey").innerHTML = values.TideJWT;
+    const tidePromise = new TidePromise();
+    const fieldData = new FieldData(["password", "username"]);
+    fieldData.add("test to encrypt", ["password"]);
+    fieldData.add("test2", ["username"]);
+    fieldData.add("test3", ["username", "password"])
+
+    const params = [jwt, fieldData, tidePromise];
+
+    const tideButtonAction = async (params) => {
+            return heimdall.TESTencryptUserDataTEST(params);
+    }
+
+    const tideButton = heimdall.AddTideButton(tideButtonAction, params);
+    const encrypted = await tidePromise.promise;
+    console.log(encrypted)
+
 </script>
 </html>
